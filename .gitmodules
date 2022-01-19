@@ -1,3 +1,3 @@
 [submodule "agent/tdx.go"]
-	path = agent/tdx
+	path = agent/tdx.go
 	url = git@github.com:c-doge/tdx.go.git
