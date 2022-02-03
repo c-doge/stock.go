@@ -1,0 +1,30 @@
+syntax = "proto3";
+option go_package ="../pb/";
+
+package pb;
+
+message KData {
+    uint32  time      = 1;
+    float   open      = 2;
+    float   close     = 3;
+    float   high      = 4;
+    float   low       = 5;
+    double  volume    = 6;
+    double  turnover  = 7;
+}
+
+
+message XData {
+    uint32 date           = 1;
+    float  allotVolume    = 2;
+    float  allotPrice     = 3;
+    float  bonusVolume    = 4;
+    float  bonusPrice     = 5;
+}
+
+message VData {
+    uint32  date        = 1;
+    double  tradable    = 2;
+    double  total       = 3;
+}
+

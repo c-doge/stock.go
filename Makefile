@@ -8,6 +8,8 @@ test:
 	mkdir -p ./var/ut/log
 	mkdir -o ./var/ut/leveldb
 
+pb: model/pb/*.proto
+	protoc --go_out=./model/pb/ ./model/pb/*.proto
 
 clean:
 	@rm gostock
