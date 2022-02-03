@@ -34,27 +34,8 @@ func checkUnzipFiles(dstPath string) error {
 func Test_unzip(t *testing.T) {
     zipFile := filepath.Join(testPath, "z.zip")
     dstPath := filepath.Join(testPath, "z")
-    f, err := os.Open(zipFile)
-    defer f.Close()
-    if err != nil {
-        t.Errorf("open lday v2 fail,  Error: %v", err)
-        return
-    }
-    fi, err := f.Stat()
-    if err != nil {
-        t.Errorf("zip file stats fail, Error: %v", err)
-        return;
-    }
     
-    err = Mkdir(dstPath)
-    if err != nil {
-        t.Errorf("mkdir %s fail, Error: %v", dstPath, err)
-    }
-    err = Unzip(f, fi.Size(), dstPath)
-    if err != nil {
-        t.Errorf("Unzip fail,  Error: %v", err)
-        return
-    }
+    err := UnzipFile(zipFile, dstPath)
     err = checkUnzipFiles(dstPath)
     if err != nil {
         t.Errorf("checkUnzipFiles fail, Error: %v", err)

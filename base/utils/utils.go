@@ -55,19 +55,14 @@ func Mkdir(path string) error {
 	fi, err := os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			os.Mkdir(path, 0777);
+			err = os.Mkdir(path, 0777);
 		} else {
 			return err
 		}
 	} else if !fi.IsDir() {
 		return errors.New("Not Direcotory")
 	}
-	
-	_, err = os.Stat(path);
-	if err != nil {
-		return err;
-	}
-	return nil
+	return err;
 }
 
 
@@ -87,6 +82,25 @@ func ListFile(dirPath string) ([]string, error) {
         return strings.Compare(files[i], files[j]) <=0
     })
     return files, nil
+}
+
+func UnzipFile(zipFile, dstPath string) error {
+	f, err := os.Open(zipFile)
+    defer f.Close()
+    if err != nil {
+        return err;
+    }
+    fi, err := f.Stat()
+    if err != nil {
+        return err; 
+    }
+    
+    err = Mkdir(dstPath)
+    if err != nil {
+    	return err;
+    }
+   	err = Unzip(f, fi.Size(), dstPath)
+    return err
 }
 
 func Unzip(r io.ReaderAt, s int64, dstPath string) error {
