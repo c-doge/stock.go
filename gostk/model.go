@@ -3,6 +3,7 @@ package gostk
 import (
     "fmt"
     "time"
+    "container/list"
 )
 
 // K线
@@ -18,7 +19,7 @@ type KData struct {
 
 func (data KData) String () string {
 
-    result := fmt.Sprintf("%v, %v, %10.3f, %10.3f, %10.3f, %10.3f, %15.3f, %20.3f",
+    result := fmt.Sprintf("%s, %10.3f, %10.3f, %10.3f, %10.3f, %15.3f, %20.3f",
         data.Time.Format("2006-01-02 15:04"),
         data.Open,
         data.Close,
@@ -54,6 +55,72 @@ func (data KData) IsValid() bool{
         return false;
     }
     return true;
+}
+
+
+type KDataMap map[string]*list.List;
+
+func NewKDataMap() KDataMap {
+    return KDataMap{}
+} 
+
+func (m KDataMap)Insert(code string, value *KData) {
+    l, ok := m[code];
+    if !ok || l == nil {
+        l = list.New();
+    } 
+    var pos *list.Element = nil;
+    if l.Len() > 0 {
+        for e := l.Front(); e != nil; e = e.Next() {
+            v := e.Value.(*KData)
+            if !value.Time.After(v.Time) {
+                pos = e;
+                break;
+            }
+        }
+    }
+    if pos == nil {
+        l.PushBack(value)
+    } else {
+        l.InsertBefore(value, pos)
+    }
+    m[code] = l;
+}
+func (m KDataMap)HasKey(code string) bool {
+    _, ok := m[code];
+    return ok;
+}
+func (m KDataMap)Empty() bool {
+    return len(m) == 0
+}
+func (m KDataMap)Size() int {
+    return len(m)
+}
+func (m KDataMap)GetList(code string) *list.List {
+    l, _ := m[code];
+    return l;
+}
+func (m KDataMap)Get(code string) []*KData {
+    l := m.GetList(code)
+    if l == nil {
+        return nil
+    }
+    ll := make([]*KData, 0, l.Len());
+    for e := l.Front(); e != nil; e = e.Next() {
+        v := e.Value.(*KData)
+        ll = append(ll, v)
+    }
+    return ll
+}
+func (m KDataMap)ForEach(f func(code string, l *list.List)) {
+    if f == nil {
+        err := "KDataMap.ForEach fatal error without f";
+        //logger.Fatalf(err)
+        panic(err)
+    }
+    for code, _list := range m {
+        f(code, _list)
+    }
 }
 
 // 除权/除息 数据
