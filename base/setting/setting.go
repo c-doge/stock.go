@@ -1,25 +1,25 @@
 package setting
 
 import (
-    yaml "gopkg.in/yaml.v2"
+    yaml "gopkg.in/yaml.v3"
     "io/ioutil"
     "fmt"
 )
 
 type Setting struct {
     Web struct {
-        Addr    string `yaml:"addr"`
+        Addr    string  `yaml:"addr"`
     }
     Log struct {
         Path    string  `yaml:"path"`
-        Level   string `yaml:"level"`
+        Level   string  `yaml:"level"`
     }
     LevelDB struct {
-        Path    string `yaml:"path"`
+        Path    string  `yaml:"path"`
     }
 }
 
-var settings *Setting = nil
+var settings *Setting = new(Setting)
 
 func Parse(filepath string) error {
 
