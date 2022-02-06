@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"os"
 
+    "github.com/c-doge/stock.go/db"
+    "github.com/c-doge/stock.go/api"
 	"github.com/c-doge/stock.go/base"
 	"github.com/c-doge/stock.go/base/logger"
+    
 )
 
 var help bool
@@ -21,10 +24,9 @@ func usage() {
 
 func init() {
     flag.BoolVar(&help,             "h", false,                "show this help")
-    flag.StringVar(&configFile,   "c", "./gostock.yaml",       "config file path")
+    flag.StringVar(&configFile,     "c", "./gostock.yaml",       "config file path")
     flag.Usage = usage
 }
-
 
 
 func main() {
@@ -43,5 +45,11 @@ func main() {
     logger.Infof("git branch:  %s\n", gitBranch);
     logger.Infof("build time:  %s\n", buildTime);
 
+    db.Start();
+    api.Init(true)
+
+
+    db.Stop();
     base.Stop();
+
 }
