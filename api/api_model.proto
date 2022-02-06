@@ -1,0 +1,45 @@
+syntax = "proto3";
+option go_package ="../api/";
+
+package pb;
+
+message KData {
+    string  code      = 1;
+    uint32  time      = 2;
+    float   open      = 3;
+    float   close     = 4;
+    float   high      = 5;
+    float   low       = 6;
+    double  volume    = 7;
+    double  turnover  = 8;
+}
+
+
+message XData {
+    uint32 date           = 1;
+    float  allotVolume    = 2;
+    float  allotPrice     = 3;
+    float  bonusVolume    = 4;
+    float  bonusPrice     = 5;
+}
+
+message VData {
+    uint32  date        = 1;
+    double  tradable    = 2;
+    double  total       = 3;
+}
+
+
+message PutLdayRequest {
+    repeated KData    data = 1;
+}
+
+message XDRRequest {
+    string            code = 1;
+    repeated XData    data = 2;
+}
+
+message VolRequest {
+    string            code = 1;
+    repeated VData    data = 2;
+}

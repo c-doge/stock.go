@@ -1,7 +1,7 @@
 syntax = "proto3";
-option go_package ="../pb/";
+option go_package ="../leveldb/";
 
-package pb;
+package leveldb;
 
 message KData {
     uint32  time      = 1;
@@ -28,3 +28,8 @@ message VData {
     double  total       = 3;
 }
 
+message RecordLday {
+    string            code = 1;
+    optional uint32   flag = 2;
+    repeated KData    data = 3;
+}

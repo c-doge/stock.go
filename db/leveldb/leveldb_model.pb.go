@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.26.0
 // 	protoc        v3.17.3
-// source: model/pb/data.proto
+// source: db/leveldb/leveldb_model.proto
 
-package pb
+package leveldb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -37,7 +37,7 @@ type KData struct {
 func (x *KData) Reset() {
 	*x = KData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_model_pb_data_proto_msgTypes[0]
+		mi := &file_db_leveldb_leveldb_model_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -50,7 +50,7 @@ func (x *KData) String() string {
 func (*KData) ProtoMessage() {}
 
 func (x *KData) ProtoReflect() protoreflect.Message {
-	mi := &file_model_pb_data_proto_msgTypes[0]
+	mi := &file_db_leveldb_leveldb_model_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -63,7 +63,7 @@ func (x *KData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use KData.ProtoReflect.Descriptor instead.
 func (*KData) Descriptor() ([]byte, []int) {
-	return file_model_pb_data_proto_rawDescGZIP(), []int{0}
+	return file_db_leveldb_leveldb_model_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *KData) GetTime() uint32 {
@@ -130,7 +130,7 @@ type XData struct {
 func (x *XData) Reset() {
 	*x = XData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_model_pb_data_proto_msgTypes[1]
+		mi := &file_db_leveldb_leveldb_model_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -143,7 +143,7 @@ func (x *XData) String() string {
 func (*XData) ProtoMessage() {}
 
 func (x *XData) ProtoReflect() protoreflect.Message {
-	mi := &file_model_pb_data_proto_msgTypes[1]
+	mi := &file_db_leveldb_leveldb_model_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -156,7 +156,7 @@ func (x *XData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use XData.ProtoReflect.Descriptor instead.
 func (*XData) Descriptor() ([]byte, []int) {
-	return file_model_pb_data_proto_rawDescGZIP(), []int{1}
+	return file_db_leveldb_leveldb_model_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *XData) GetDate() uint32 {
@@ -207,7 +207,7 @@ type VData struct {
 func (x *VData) Reset() {
 	*x = VData{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_model_pb_data_proto_msgTypes[2]
+		mi := &file_db_leveldb_leveldb_model_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -220,7 +220,7 @@ func (x *VData) String() string {
 func (*VData) ProtoMessage() {}
 
 func (x *VData) ProtoReflect() protoreflect.Message {
-	mi := &file_model_pb_data_proto_msgTypes[2]
+	mi := &file_db_leveldb_leveldb_model_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -233,7 +233,7 @@ func (x *VData) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VData.ProtoReflect.Descriptor instead.
 func (*VData) Descriptor() ([]byte, []int) {
-	return file_model_pb_data_proto_rawDescGZIP(), []int{2}
+	return file_db_leveldb_leveldb_model_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *VData) GetDate() uint32 {
@@ -257,11 +257,75 @@ func (x *VData) GetTotal() float64 {
 	return 0
 }
 
-var File_model_pb_data_proto protoreflect.FileDescriptor
+type RecordLday struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
 
-var file_model_pb_data_proto_rawDesc = []byte{
-	0x0a, 0x13, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x2f, 0x70, 0x62, 0x2f, 0x64, 0x61, 0x74, 0x61, 0x2e,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x02, 0x70, 0x62, 0x22, 0x9f, 0x01, 0x0a, 0x05, 0x4b, 0x44,
+	Code string   `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
+	Flag *uint32  `protobuf:"varint,2,opt,name=flag,proto3,oneof" json:"flag,omitempty"`
+	Data []*KData `protobuf:"bytes,3,rep,name=data,proto3" json:"data,omitempty"`
+}
+
+func (x *RecordLday) Reset() {
+	*x = RecordLday{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_db_leveldb_leveldb_model_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *RecordLday) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RecordLday) ProtoMessage() {}
+
+func (x *RecordLday) ProtoReflect() protoreflect.Message {
+	mi := &file_db_leveldb_leveldb_model_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RecordLday.ProtoReflect.Descriptor instead.
+func (*RecordLday) Descriptor() ([]byte, []int) {
+	return file_db_leveldb_leveldb_model_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *RecordLday) GetCode() string {
+	if x != nil {
+		return x.Code
+	}
+	return ""
+}
+
+func (x *RecordLday) GetFlag() uint32 {
+	if x != nil && x.Flag != nil {
+		return *x.Flag
+	}
+	return 0
+}
+
+func (x *RecordLday) GetData() []*KData {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+var File_db_leveldb_leveldb_model_proto protoreflect.FileDescriptor
+
+var file_db_leveldb_leveldb_model_proto_rawDesc = []byte{
+	0x0a, 0x1e, 0x64, 0x62, 0x2f, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x64, 0x62, 0x2f, 0x6c, 0x65, 0x76,
+	0x65, 0x6c, 0x64, 0x62, 0x5f, 0x6d, 0x6f, 0x64, 0x65, 0x6c, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x12, 0x07, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x64, 0x62, 0x22, 0x9f, 0x01, 0x0a, 0x05, 0x4b, 0x44,
 	0x61, 0x74, 0x61, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x0d, 0x52, 0x04, 0x74, 0x69, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6f, 0x70, 0x65, 0x6e, 0x18,
 	0x02, 0x20, 0x01, 0x28, 0x02, 0x52, 0x04, 0x6f, 0x70, 0x65, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x63,
@@ -286,43 +350,52 @@ var file_model_pb_data_proto_rawDesc = []byte{
 	0x20, 0x01, 0x28, 0x0d, 0x52, 0x04, 0x64, 0x61, 0x74, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x74, 0x72,
 	0x61, 0x64, 0x61, 0x62, 0x6c, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x08, 0x74, 0x72,
 	0x61, 0x64, 0x61, 0x62, 0x6c, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x42, 0x08, 0x5a, 0x06,
-	0x2e, 0x2e, 0x2f, 0x70, 0x62, 0x2f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x03, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x22, 0x66, 0x0a, 0x0a,
+	0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x4c, 0x64, 0x61, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f,
+	0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x17,
+	0x0a, 0x04, 0x66, 0x6c, 0x61, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x48, 0x00, 0x52, 0x04,
+	0x66, 0x6c, 0x61, 0x67, 0x88, 0x01, 0x01, 0x12, 0x22, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61, 0x18,
+	0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0e, 0x2e, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x64, 0x62, 0x2e,
+	0x4b, 0x44, 0x61, 0x74, 0x61, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x42, 0x07, 0x0a, 0x05, 0x5f,
+	0x66, 0x6c, 0x61, 0x67, 0x42, 0x0d, 0x5a, 0x0b, 0x2e, 0x2e, 0x2f, 0x6c, 0x65, 0x76, 0x65, 0x6c,
+	0x64, 0x62, 0x2f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_model_pb_data_proto_rawDescOnce sync.Once
-	file_model_pb_data_proto_rawDescData = file_model_pb_data_proto_rawDesc
+	file_db_leveldb_leveldb_model_proto_rawDescOnce sync.Once
+	file_db_leveldb_leveldb_model_proto_rawDescData = file_db_leveldb_leveldb_model_proto_rawDesc
 )
 
-func file_model_pb_data_proto_rawDescGZIP() []byte {
-	file_model_pb_data_proto_rawDescOnce.Do(func() {
-		file_model_pb_data_proto_rawDescData = protoimpl.X.CompressGZIP(file_model_pb_data_proto_rawDescData)
+func file_db_leveldb_leveldb_model_proto_rawDescGZIP() []byte {
+	file_db_leveldb_leveldb_model_proto_rawDescOnce.Do(func() {
+		file_db_leveldb_leveldb_model_proto_rawDescData = protoimpl.X.CompressGZIP(file_db_leveldb_leveldb_model_proto_rawDescData)
 	})
-	return file_model_pb_data_proto_rawDescData
+	return file_db_leveldb_leveldb_model_proto_rawDescData
 }
 
-var file_model_pb_data_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_model_pb_data_proto_goTypes = []interface{}{
-	(*KData)(nil), // 0: pb.KData
-	(*XData)(nil), // 1: pb.XData
-	(*VData)(nil), // 2: pb.VData
+var file_db_leveldb_leveldb_model_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_db_leveldb_leveldb_model_proto_goTypes = []interface{}{
+	(*KData)(nil),      // 0: leveldb.KData
+	(*XData)(nil),      // 1: leveldb.XData
+	(*VData)(nil),      // 2: leveldb.VData
+	(*RecordLday)(nil), // 3: leveldb.RecordLday
 }
-var file_model_pb_data_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+var file_db_leveldb_leveldb_model_proto_depIdxs = []int32{
+	0, // 0: leveldb.RecordLday.data:type_name -> leveldb.KData
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_model_pb_data_proto_init() }
-func file_model_pb_data_proto_init() {
-	if File_model_pb_data_proto != nil {
+func init() { file_db_leveldb_leveldb_model_proto_init() }
+func file_db_leveldb_leveldb_model_proto_init() {
+	if File_db_leveldb_leveldb_model_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_model_pb_data_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_db_leveldb_leveldb_model_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*KData); i {
 			case 0:
 				return &v.state
@@ -334,7 +407,7 @@ func file_model_pb_data_proto_init() {
 				return nil
 			}
 		}
-		file_model_pb_data_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_db_leveldb_leveldb_model_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*XData); i {
 			case 0:
 				return &v.state
@@ -346,7 +419,7 @@ func file_model_pb_data_proto_init() {
 				return nil
 			}
 		}
-		file_model_pb_data_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_db_leveldb_leveldb_model_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*VData); i {
 			case 0:
 				return &v.state
@@ -358,23 +431,36 @@ func file_model_pb_data_proto_init() {
 				return nil
 			}
 		}
+		file_db_leveldb_leveldb_model_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*RecordLday); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
+	file_db_leveldb_leveldb_model_proto_msgTypes[3].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_model_pb_data_proto_rawDesc,
+			RawDescriptor: file_db_leveldb_leveldb_model_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_model_pb_data_proto_goTypes,
-		DependencyIndexes: file_model_pb_data_proto_depIdxs,
-		MessageInfos:      file_model_pb_data_proto_msgTypes,
+		GoTypes:           file_db_leveldb_leveldb_model_proto_goTypes,
+		DependencyIndexes: file_db_leveldb_leveldb_model_proto_depIdxs,
+		MessageInfos:      file_db_leveldb_leveldb_model_proto_msgTypes,
 	}.Build()
-	File_model_pb_data_proto = out.File
-	file_model_pb_data_proto_rawDesc = nil
-	file_model_pb_data_proto_goTypes = nil
-	file_model_pb_data_proto_depIdxs = nil
+	File_db_leveldb_leveldb_model_proto = out.File
+	file_db_leveldb_leveldb_model_proto_rawDesc = nil
+	file_db_leveldb_leveldb_model_proto_goTypes = nil
+	file_db_leveldb_leveldb_model_proto_depIdxs = nil
 }
