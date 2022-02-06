@@ -121,8 +121,8 @@ func Test_DownloadUnzip(t *testing.T) {
 
 func Test_TimeData(t *testing.T) {
     date := uint32(20120322)
-    t1 := DateToTime(date)
-    d1 := TimeToDate(t1);
+    t1 := DecimalNumToDateTime(date)
+    d1 := DateTimeToDecimalNum(t1);
     if d1 != date {
         t.Errorf("%d not equal to %d", d1, 20120322)
     }
@@ -135,7 +135,5 @@ func TestMain(m *testing.M) {
     logger.Info("stock.go base/utils test start >>>")
     m.Run()
     logger.Info("stock.go base/utils test stop >>>")
-
-   // 
 
 }

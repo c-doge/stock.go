@@ -21,8 +21,7 @@ var DefaultTimeZone = time.FixedZone("UTC-8", int((8 * time.Hour).Seconds()))
 var EarlyDate       = time.Date(1970,  1,  1, 0, 0, 0, 0, DefaultTimeZone);
 var FutureDate      = time.Date(2100, 12, 31, 0, 0, 0, 0, DefaultTimeZone);
 
-
-func DateToTime(date uint32) time.Time {
+func DecimalNumToDateTime(date uint32) time.Time {
 	y := int(date / 10000);
 	m := int((date % 10000) / 100);
 	d := int(date % 100);
@@ -32,7 +31,7 @@ func DateToTime(date uint32) time.Time {
 	return ts;
 }
 
-func TimeToDate(t time.Time) uint32 {
+func DateTimeToDecimalNum(t time.Time) uint32 {
 	y := t.Year();
 	m := int(t.Month());
 	d := t.Day();
@@ -40,6 +39,9 @@ func TimeToDate(t time.Time) uint32 {
 }
 
 func PathExists(path string) bool {
+	if len(path) == 0 {
+		return false
+	}
 	_, err := os.Stat(path)
 	if err == nil {
 		return true
