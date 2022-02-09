@@ -15,6 +15,8 @@ import (
     "archive/zip"
     "path/filepath"
 	"encoding/binary"
+
+//    "github.com/c-doge/stock.go/base/logger"
 )
 
 var DefaultTimeZone = time.FixedZone("UTC-8", int((8 * time.Hour).Seconds()))
@@ -56,6 +58,16 @@ func PathExists(path string) bool {
 	return false
 }
 
+func IsDir(path string) bool {
+    if len(path) == 0 {
+        return false
+    }
+    fi, err := os.Stat(path)
+    if err == nil && fi.IsDir() {
+        return true
+    }
+    return false;
+}
 
 func Mkdir(path string) error {
 	fi, err := os.Stat(path)
@@ -147,8 +159,6 @@ func Download(url, path string,  unzip bool) error {
     if resp.StatusCode != 200 {
         return fmt.Errorf("Http Response %d %s", resp.StatusCode, resp.Status);
     }
-    
-
     if unzip {
     	var fi os.FileInfo;
 	    fi, err = os.Stat(path);
