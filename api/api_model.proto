@@ -24,9 +24,11 @@ message XData {
 }
 
 message VData {
-    uint32  date        = 1;
-    double  tradable    = 2;
-    double  total       = 3;
+    uint32  date           = 1;
+    double  preTradable    = 2;
+    double  preTotal       = 3;
+    double  postTradable   = 4;
+    double  postTotal      = 5;   
 }
 
 
@@ -34,12 +36,12 @@ message PutLdayRequest {
     repeated KData    data = 1;
 }
 
-message XDRRequest {
+message PutXDRRequest {
     string            code = 1;
     repeated XData    data = 2;
 }
 
-message VolRequest {
+message PutVolRequest {
     string            code = 1;
     repeated VData    data = 2;
 }
