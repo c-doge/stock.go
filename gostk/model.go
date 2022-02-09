@@ -149,14 +149,18 @@ func (data XData) String () string {
 // 股本信息
 type VData struct {
     Date               time.Time      //"时间戳"
-    Tradable           float64        // 流通股  x10000
-    Total              float64        // 总股本  x10000
+    PreTradable        float64        // 变动前 流通股  x10000
+    PreTotal           float64        // 变动前 总股本  x10000
+    PostTradable       float64        // 变动后 流通股  x10000
+    PostTotal          float64        // 变动后 总股本  x10000
 }
 
 func (data VData) String () string {
-    result := fmt.Sprintf("%v, %f, %f",
+    result := fmt.Sprintf("%v, %0.3f, %0.3f, %0.3f, %0.3f",
         data.Date.Format("2006-01-02"),
-        data.Tradable,
-        data.Total);
+        data.PreTradable,
+        data.PostTradable,
+        data.PreTotal,
+        data.PostTotal);
     return result;
 }
