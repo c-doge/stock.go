@@ -23,13 +23,27 @@ message XData {
 }
 
 message VData {
-    uint32  date        = 1;
-    double  tradable    = 2;
-    double  total       = 3;
+    uint32  date            = 1;
+    double  preTradable     = 2;
+    double  preTotal        = 3;
+    double  postTradable    = 4;
+    double  postTotal       = 5;
 }
 
 message RecordLday {
     string            code = 1;
     optional uint32   flag = 2;
     repeated KData    data = 3;
+}
+
+message RecordXDR {
+    string            code = 1;
+    optional uint32   flag = 2;
+    repeated XData    data = 3;
+}
+
+message RecordVol {
+    string            code = 1;
+    optional uint32   flag = 2;
+    repeated VData    data = 3;
 }
