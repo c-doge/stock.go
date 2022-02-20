@@ -1,13 +1,9 @@
 [Unit]
 Description=Stock.go Service
-After=network.target nss-lookup.target
-Wants=network.target nss-lookup.target
+After=network.target
 ConditionPathExists=/usr/local/stock/stock.go/etc/gostock.yaml
 
 [Service]
-User=nobody
-CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
-AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
 ExecStart=/usr/local/stock/stock.go/bin/gostock -c /usr/local/stock/stock.go/etc/gostock.yaml
 Restart=on-failure
