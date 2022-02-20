@@ -64,7 +64,7 @@ func NewKDataMap() KDataMap {
     return KDataMap{}
 } 
 
-func (m KDataMap)Insert(code string, value *KData) {
+func (m KDataMap) Insert(code string, value *KData) {
     l, ok := m[code];
     if !ok || l == nil {
         l = list.New();
@@ -86,21 +86,21 @@ func (m KDataMap)Insert(code string, value *KData) {
     }
     m[code] = l;
 }
-func (m KDataMap)HasKey(code string) bool {
+func (m KDataMap) HasKey(code string) bool {
     _, ok := m[code];
     return ok;
 }
-func (m KDataMap)Empty() bool {
+func (m KDataMap) Empty() bool {
     return len(m) == 0
 }
-func (m KDataMap)Size() int {
+func (m KDataMap) Size() int {
     return len(m)
 }
-func (m KDataMap)GetList(code string) *list.List {
+func (m KDataMap) GetList(code string) *list.List {
     l, _ := m[code];
     return l;
 }
-func (m KDataMap)Get(code string) []*KData {
+func (m KDataMap) Get(code string) []*KData {
     l := m.GetList(code)
     if l == nil {
         return nil
@@ -112,7 +112,7 @@ func (m KDataMap)Get(code string) []*KData {
     }
     return ll
 }
-func (m KDataMap)ForEach(f func(code string, l *list.List)) {
+func (m KDataMap) ForEach(f func(code string, l *list.List)) {
     if f == nil {
         err := "KDataMap.ForEach fatal error without f";
         //logger.Fatalf(err)
