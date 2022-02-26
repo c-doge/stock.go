@@ -1,14 +1,14 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-	"os"
+    "flag"
+    "fmt"
+    "os"
 
     "github.com/c-doge/stock.go/db"
     "github.com/c-doge/stock.go/api"
-	"github.com/c-doge/stock.go/base"
-	"github.com/c-doge/stock.go/base/logger"
+    "github.com/c-doge/stock.go/base"
+    "github.com/c-doge/stock.go/base/logger"
     
 )
 
@@ -31,7 +31,7 @@ func init() {
 
 func main() {
 
-	flag.Parse()
+    flag.Parse()
     if help {
         usage()
         os.Exit(0)
@@ -41,9 +41,9 @@ func main() {
         panic(err);
     }
 
-    logger.Infof("version:     %s\n", version);
-    logger.Infof("git branch:  %s\n", gitBranch);
-    logger.Infof("build time:  %s\n", buildTime);
+    logger.Infof("version:     %s\n", _version);
+    logger.Infof("git branch:  %s\n", _gitBranch);
+    logger.Infof("build time:  %s\n", _buildTime);
 
     db.Start();
     api.Init(true)

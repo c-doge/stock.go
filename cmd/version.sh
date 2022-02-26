@@ -19,6 +19,6 @@ BUILD_TIME=`date "+%Y-%m-%d %H:%M:%S"`
 #echo "build time: $BUILD_TIME"
 
 echo -e "package main\n" > $VERSION_GO
-echo -e "var buildTime string = \"$BUILD_TIME\";\n" >> $VERSION_GO
-echo -e "var gitBranch string = \"$BRANCH_NAME-$COMMIT_HASH\";\n" >> $VERSION_GO
-echo -e "var version string = \"v0.0.1\";\n" >> $VERSION_GO
+echo -e "var _buildTime string = \"$BUILD_TIME\";\n" >> $VERSION_GO
+echo -e "var _gitBranch string = \"$BRANCH_NAME-$COMMIT_HASH\";\n" >> $VERSION_GO
+echo -e "var _version string = \"v0.0.1\";\n" >> $VERSION_GO
