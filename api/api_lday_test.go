@@ -131,12 +131,8 @@ func newOneStockPutLdayRequest(code string, dateNum uint32, n int) *PutLdayReque
 }
 
 func putLday(req *PutLdayRequest) error {
-    type Message struct {
-        Status     int `json:"status"`
-        Updated    int `json:"update"`
-    }
-    var m Message;
-    num := len(req.Data)
+
+    var m ResponseModel;
     reqBin, err := proto.Marshal(req);
     if err != nil {
         //t.Errorf("protobuf marshal LDayRequest fail, Error: %v", err);
@@ -154,9 +150,6 @@ func putLday(req *PutLdayRequest) error {
     if m.Status != httptest.StatusOK {
         //t.Errorf("putLday, status Code Not Equal to %d", httptest.StatusOK);
         return fmt.Errorf("Response Not Success, statusCode %d", m.Status)
-    }
-    if m.Updated != num {
-        return fmt.Errorf("Insufficient KData Updated: %d < %d", m.Updated, num)
     }
     return nil;
 }
@@ -214,12 +207,9 @@ func checkCsvWithPutMsg(code string, r *csv.Reader, ll []*KData) error {
 }
 
 func checkResponseError(w *htest.ResponseRecorder, status int, errMsg string) error {
-    type Message struct {
-        Error     string `json:"error"`
-        Status    int    `json:"status"`
-    }
-    var m Message
-    if w.Code != status {
+
+    var m ResponseModel
+    if w.Code != iris.StatusOK {
         return fmt.Errorf("check statusCode fail: %d", w.Code);
     }
     err := json.Unmarshal(w.Body.Bytes(), &m);
@@ -229,8 +219,8 @@ func checkResponseError(w *htest.ResponseRecorder, status int, errMsg string) er
     if m.Status != status {
         return fmt.Errorf("check reponse status fail, status: %d", m.Status);
     }
-    if len(errMsg) > 0 && !strings.Contains(m.Error, errMsg) {
-        return fmt.Errorf("check response error message fail, %s", m.Error)
+    if len(errMsg) > 0 && !strings.Contains(m.Message, errMsg) {
+        return fmt.Errorf("check response error message fail, %s", m.Message)
     }
     return nil
 }
@@ -244,7 +234,7 @@ func Test_GetLday(t *testing.T) {
     w1 := httptest.NewRecorder()
     httptest.Do(w1, r1, apiV1GetLday)
 //    t.Logf("%s ==> \nResponse: %d,\nBody:%s", caseName, w1.Code, w1.Body.String());
-    err := checkResponseError(w1, iris.StatusBadRequest, "Accept Type Unknown")
+    err := checkResponseError(w1, StatusBadRequest, "Accept Type Unknown")
     if err != nil {
         t.Errorf("TestGetLday.%s test fail, Error: %v", caseName, err);
         return
@@ -257,7 +247,7 @@ func Test_GetLday(t *testing.T) {
     w2 := httptest.NewRecorder()
     httptest.Do(w2, r2, apiV1GetLday)
 //    t.Logf("%s ==> \nResponse: %d,\nBody:\n%s", caseName, w2.Code, w2.Body.String());
-    err = checkResponseError(w2, iris.StatusBadRequest, "Stock Code Unknown")
+    err = checkResponseError(w2, StatusBadRequest, "Stock Code Unknown")
     if err != nil {
         t.Errorf("TestGetLday.%s test fail, Error: %v", caseName, err);
         return
@@ -270,7 +260,7 @@ func Test_GetLday(t *testing.T) {
     w3 := httptest.NewRecorder()
     httptest.Do(w3, r3, apiV1GetLday)
 //    t.Logf("%s: \nResponse: %d,\nBody:\n%s", caseName, w3.Code, w3.Body.String());
-    err = checkResponseError(w3, iris.StatusBadRequest, "Parse 120120101 fail")
+    err = checkResponseError(w3, StatusBadRequest, "Parse 120120101 fail")
     if err != nil {
         t.Errorf("TestGetLday.%s test fail, Error: %v", caseName, err);
         return
@@ -282,7 +272,7 @@ func Test_GetLday(t *testing.T) {
     w4 := httptest.NewRecorder()
     httptest.Do(w4, r4, apiV1GetLday)
 //    t.Logf("%s ==> \nResponse: %d,\nBody:\n%s", caseName, w4.Code, w4.Body.String());
-    err = checkResponseError(w4, iris.StatusBadRequest, "Parse 201201311 fail")
+    err = checkResponseError(w4, StatusBadRequest, "Parse 201201311 fail")
     if err != nil {
         t.Errorf("TestGetLday.%s test fail, Error: %v", caseName, err);
         return
@@ -294,7 +284,7 @@ func Test_GetLday(t *testing.T) {
     w5 := httptest.NewRecorder()
     httptest.Do(w5, r5, apiV1GetLday)
 //    t.Logf("%s ==> \nResponse: %d,\nBody:\n%s", caseName, w5.Code, w5.Body.String());
-    err = checkResponseError(w5, iris.StatusBadRequest, "From time is later than To time")
+    err = checkResponseError(w5, StatusBadRequest, "From time is later than To time")
     if err != nil {
         t.Errorf("TestGetLday.%s test fail, Error: %v", caseName, err);
         return
@@ -329,17 +319,14 @@ func Test_GetLday(t *testing.T) {
 }
 
 func Test_PutLday(t *testing.T) {
-    type Message struct {
-        Status     int `json:"status"`
-        Updated    int `json:"update"`
-    }
+
     caseName := "BadProtoc"
     reqBin1 := make([]byte, 10)
     w1 := httptest.NewRecorder()
     r1 := httptest.NewRequest("PUT", "/api/v1/lday", bytes.NewReader(reqBin1))
     httptest.Do(w1, r1, apiV1PutLday)
 //    t.Logf("%s ==> \nResponse: %d,\nBody:\n%s", caseName, w1.Code, w1.Body.String());
-    err := checkResponseError(w1, iris.StatusBadRequest, "cannot parse invalid wire-format data")
+    err := checkResponseError(w1, StatusBadRequest, "cannot parse invalid wire-format data")
     if err != nil {
         t.Errorf("TestPutLday.%s, test fail, Error: %v", caseName, err);
     }
@@ -357,14 +344,14 @@ func Test_PutLday(t *testing.T) {
     r2 := httptest.NewRequest("PUT", "/api/v1/lday", bytes.NewReader(reqBin2))
     httptest.Do(w2, r2, apiV1PutLday)
 //    t.Logf("%s ==> \nResponse: %d,\nBody:\n%s", caseName, w2.Code, w2.Body.String());
-    err = checkResponseError(w2, iris.StatusBadRequest, "KData is empty")
+    err = checkResponseError(w2, StatusBadRequest, "KData is empty")
     if err != nil {
         t.Errorf("TestPutLday.%s test fail, Error: %v", caseName, err);
         return
     }
 
     caseName = "MalforamtKData"
-    var m3 Message
+    var m3 ResponseModel
     l_kdata := make([]*KData, 100)
     reqMsg3 := &PutLdayRequest{
         Data: l_kdata,
@@ -377,16 +364,22 @@ func Test_PutLday(t *testing.T) {
     w3 := httptest.NewRecorder()
     r3 := httptest.NewRequest("PUT", "/api/v1/lday", bytes.NewReader(reqBin3))
     httptest.Do(w3, r3, apiV1PutLday)
-//    t.Logf("%s ==> \nResponse: %d,\nBody:\n%s", caseName, w3.Code, w3.Body.String());
+    if (w3.Code != iris.StatusOK) {
+        t.Errorf("TestPutLday.%s, Http Response StatusCode %d", caseName, w3.Code);
+    }
+    t.Logf("%s ==> \nResponse: %d,\nBody:\n%s", caseName, w3.Code, w3.Body.String());
     err = json.Unmarshal(w3.Body.Bytes(), &m3);
     if err != nil {
         t.Errorf("TestPutLday.%s, Unmarshal response fail, Error: %s", caseName, err);
+        return
     }
-    if m3.Status != httptest.StatusOK {
-        t.Errorf("TestPutLday.%s, Http Response StatusCode %d", caseName, m3.Status);
+    if m3.Status != StatusOK {
+        t.Errorf("TestPutLday.%s, Http Response Status %d", caseName, m3.Status);
+        return
     }
-    if m3.Updated != 0 {
-        t.Errorf("TestPutLday.%s, Malforamt KData Was Updated: %d", caseName, m3.Updated)
+    if m3.Message != "0 stock and 0 kdata updated" {
+        t.Errorf("TestPutLday.%s, Check Update message fail: %s", caseName, m3.Message);
+        return 
     }
 
     caseName = "Success"
@@ -396,6 +389,7 @@ func Test_PutLday(t *testing.T) {
         t.Errorf("TestPutLday.%s, protobuf marshal LdayRequest fail, Error: %v", caseName, err);
         return;
     }
+
     w4 := httptest.NewRecorder()
     r4 := httptest.NewRequest("PUT", "/api/v1/lday", bytes.NewReader(reqBin4))
     httptest.Do(w4, r4, apiV1PutLday)

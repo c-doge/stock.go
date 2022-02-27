@@ -39,13 +39,13 @@ func apiV1PutLday(ctx iris.Context) {
     var req PutLdayRequest;
     err := ctx.ReadProtobuf(&req)
     if err != nil {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": err.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": err.Error()})
         return;
     }
     if req.Data == nil || len(req.Data) == 0 {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "KData is empty"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "KData is empty"})
         return;
     }
     var m = gostk.NewKDataMap()
@@ -57,7 +57,8 @@ func apiV1PutLday(ctx iris.Context) {
         }
     }
 
-    var total = 0;
+    var total_stock int = 0;
+    var total_kdata int = 0;
     m.ForEach(func(code string, l *list.List) {
         ll := make([]*gostk.KData, 0, l.Len())
         for e := l.Front(); e != nil; e = e.Next() {
@@ -69,12 +70,15 @@ func apiV1PutLday(ctx iris.Context) {
             if err != nil {
                 logger.Warnf("[API.Lday] db.PutLday fail, error: %v", err);
             } else {
-                total += len(ll);
+                total_kdata += len(ll);
+                total_stock += 1;
             }
         }
     })
-    logger.Infof("[API.Lday] PutLday total updated: %d", total)
-    ctx.JSON(iris.Map{"status": iris.StatusOK, "update": total})
+    msg := fmt.Sprintf("%d stock and %d kdata updated", total_stock, total_kdata)
+    logger.Infof("[API.Lday] PutLday %s", msg)
+    
+    ctx.JSON(iris.Map{"status": StatusOK, "message": msg})
 }
 
 func apiV1GetLday(ctx iris.Context) {
@@ -82,18 +86,18 @@ func apiV1GetLday(ctx iris.Context) {
 
     err := ctx.ReadQuery(&req)
     if err != nil && !iris.IsErrPath(err) {
-        ctx.StatusCode(iris.StatusInternalServerError)
-        ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "error": err.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusServerError, "message": err.Error()})
         return;
     }
     if req.Type != "csv" {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "Accept Type Unknown"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "Accept Type Unknown"})
         return
     }
     if !gostk.IsStockCodeValid(req.Code) {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": gostk.ErrorStockCodeUnknown.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": gostk.ErrorStockCodeUnknown.Error()})
         return
     }
     from, e1 := utils.ParseTime("20060102", req.From)
@@ -105,24 +109,25 @@ func apiV1GetLday(ctx iris.Context) {
         } else {
             msg = fmt.Sprintf("Parse %s fail, Error: %s", req.To, e2);
         }
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": msg})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": msg})
         return
     }
 
     if from.After(to) {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "From time is later than To time"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "From time is later than To time"})
         return
     }
     
     l, err := db.GetLday(req.Code, from, to);
     if err != nil {
-        ctx.StatusCode(iris.StatusInternalServerError)
-        ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "error": err.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusServerError, "message": err.Error()})
         return
     }
 
+    ctx.StatusCode(iris.StatusOK)
     ctx.Header("Transfer-Encoding", "chunked")
     if req.Head {
         ctx.WriteString("Date,Open,Close,High,Low,Volume,Turnover\n")

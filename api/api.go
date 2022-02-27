@@ -7,7 +7,18 @@ import (
     "github.com/c-doge/stock.go/base/logger"
 )
 
+const (
+    StatusOK            = 0
+    StatusServerError   = 1
+    StatusBadRequest    = 2
+)
+
 var webApp *iris.Application = nil
+
+type ResponseModel struct {
+    Message     string `json:"message"`
+    Status      int    `json:"status"`
+}
 
 func Init(run bool) error {
     logger.Info("API Start")

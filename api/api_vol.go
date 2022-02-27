@@ -31,18 +31,18 @@ func apiV1GetVolumeList(ctx iris.Context) {
 	var req GetVolRequest;
  	err := ctx.ReadQuery(&req)
     if err != nil && !iris.IsErrPath(err) {
-        ctx.StatusCode(iris.StatusInternalServerError)
-        ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "error": err.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusServerError, "message": err.Error()})
         return;
     }
     if req.Type != "csv" {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "Accept Type Unknown"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "Accept Type Unknown"})
         return
     }
     if !gostk.IsStockCodeValid(req.Code) {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": gostk.ErrorStockCodeUnknown.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": gostk.ErrorStockCodeUnknown.Error()})
         return
     }
     var from time.Time = utils.EarlyDate
@@ -51,8 +51,8 @@ func apiV1GetVolumeList(ctx iris.Context) {
     	from, err = utils.ParseTime("20060102", req.From)
     	if err != nil {
     		msg := fmt.Sprintf("Parse %s fail, Error: %s", req.From, err);
-    		ctx.StatusCode(iris.StatusBadRequest)
-        	ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": msg})
+    		ctx.StatusCode(iris.StatusOK)
+        	ctx.JSON(iris.Map{"status": StatusBadRequest, "message": msg})
         	return
     	}
     }
@@ -60,20 +60,20 @@ func apiV1GetVolumeList(ctx iris.Context) {
     	to, err = utils.ParseTime("20060102", req.To)
     	if err != nil {
     		msg := fmt.Sprintf("Parse %s fail, Error: %s", req.To, err);
-    		ctx.StatusCode(iris.StatusBadRequest)
-        	ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": msg})
+    		ctx.StatusCode(iris.StatusOK)
+        	ctx.JSON(iris.Map{"status": StatusBadRequest, "message": msg})
         	return
     	}
     }
     if from.After(to) {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "From time is later than To time"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "From time is later than To time"})
         return
     }
     l, err := db.GetVolumeList(req.Code, from, to)
     if err != nil {
-    	ctx.StatusCode(iris.StatusInternalServerError)
-        ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "error": err.Error()})
+    	ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusServerError, "message": err.Error()})
         return
     }
     if req.Head {
@@ -93,18 +93,18 @@ func apiV1PutVolumeList(ctx iris.Context) {
 	var req PutVolRequest;
     err := ctx.ReadProtobuf(&req)
     if err != nil {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": err.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": err.Error()})
         return;
     }
     if req.Data == nil || len(req.Data) == 0 {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "VData is empty"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "VData is empty"})
         return;
     }
     if !gostk.IsStockCodeValid(req.Code) {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "Stock Code Unknown"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "Stock Code Unknown"})
         return;
     }
     l := make([]*gostk.VData, len(req.Data))
@@ -119,12 +119,12 @@ func apiV1PutVolumeList(ctx iris.Context) {
     }
     err = db.PutVolumeList(req.Code, l)
     if err != nil {
-        ctx.StatusCode(iris.StatusInternalServerError)
-        ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "error": err.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusServerError, "message": err.Error()})
         return
     }
     ctx.StatusCode(iris.StatusOK)
-    ctx.JSON(iris.Map{"status": iris.StatusOK})
+    ctx.JSON(iris.Map{"status": StatusOK})
 }
 
 
@@ -132,18 +132,18 @@ func apiV1GetXDRList(ctx iris.Context) {
 	var req GetXDRRequest
  	err := ctx.ReadQuery(&req)
     if err != nil && !iris.IsErrPath(err) {
-        ctx.StatusCode(iris.StatusInternalServerError)
-        ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "error": err.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusServerError, "message": err.Error()})
         return;
     }
     if req.Type != "csv" {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "Accept Type Unknown"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "Accept Type Unknown"})
         return
     }
     if !gostk.IsStockCodeValid(req.Code) {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": gostk.ErrorStockCodeUnknown.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": gostk.ErrorStockCodeUnknown.Error()})
         return
     }
     var from time.Time = utils.EarlyDate
@@ -152,8 +152,8 @@ func apiV1GetXDRList(ctx iris.Context) {
     	from, err = utils.ParseTime("20060102", req.From)
     	if err != nil {
     		msg := fmt.Sprintf("Parse %s fail, Error: %s", req.From, err);
-    		ctx.StatusCode(iris.StatusBadRequest)
-        	ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": msg})
+    		ctx.StatusCode(iris.StatusOK)
+        	ctx.JSON(iris.Map{"status": StatusBadRequest, "message": msg})
         	return
     	}
     }
@@ -161,20 +161,20 @@ func apiV1GetXDRList(ctx iris.Context) {
     	to, err = utils.ParseTime("20060102", req.To)
     	if err != nil {
     		msg := fmt.Sprintf("Parse %s fail, Error: %s", req.To, err);
-    		ctx.StatusCode(iris.StatusBadRequest)
-        	ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": msg})
+    		ctx.StatusCode(iris.StatusOK)
+        	ctx.JSON(iris.Map{"status": StatusBadRequest, "message": msg})
         	return
     	}
     }
     if from.After(to) {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "From time is later than To time"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "From time is later than To time"})
         return
     }
     l, err := db.GetXDRList(req.Code, from, to)
     if err != nil {
-    	ctx.StatusCode(iris.StatusInternalServerError)
-        ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "error": err.Error()})
+    	ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusServerError, "message": err.Error()})
         return
     }
     if req.Head {
@@ -194,18 +194,18 @@ func apiV1PutXDRList(ctx iris.Context) {
 	var req PutXDRRequest;
     err := ctx.ReadProtobuf(&req)
     if err != nil {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": err.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": err.Error()})
         return;
     }
     if req.Data == nil || len(req.Data) == 0 {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "XData is empty"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "XData is empty"})
         return;
     }
     if !gostk.IsStockCodeValid(req.Code) {
-        ctx.StatusCode(iris.StatusBadRequest)
-        ctx.JSON(iris.Map{"status": iris.StatusBadRequest, "error": "Stock Code Unknown"})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusBadRequest, "message": "Stock Code Unknown"})
         return;
     }
     l := make([]*gostk.XData, len(req.Data))
@@ -220,10 +220,10 @@ func apiV1PutXDRList(ctx iris.Context) {
     }
     err = db.PutXDRList(req.Code, l)
     if err != nil {
-        ctx.StatusCode(iris.StatusInternalServerError)
-        ctx.JSON(iris.Map{"status": iris.StatusInternalServerError, "error": err.Error()})
+        ctx.StatusCode(iris.StatusOK)
+        ctx.JSON(iris.Map{"status": StatusServerError, "message": err.Error()})
         return
     }
     ctx.StatusCode(iris.StatusOK)
-    ctx.JSON(iris.Map{"status": iris.StatusOK})
+    ctx.JSON(iris.Map{"status": StatusOK, "message": "success"})
 }

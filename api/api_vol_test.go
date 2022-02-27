@@ -51,12 +51,9 @@ func equalXData(d1, d2 *XData) bool {
 }
 
 func checkVolResponseError(w *htest.ResponseRecorder, status int, errMsg string) error {
-    type Message struct {
-        Error     string `json:"error"`
-        Status    int    `json:"status"`
-    }
-    var m Message
-    if w.Code != status {
+
+    var m ResponseModel
+    if w.Code != iris.StatusOK {
         return fmt.Errorf("check statusCode fail: %d", w.Code);
     }
     err := json.Unmarshal(w.Body.Bytes(), &m);
@@ -66,8 +63,8 @@ func checkVolResponseError(w *htest.ResponseRecorder, status int, errMsg string)
     if m.Status != status {
         return fmt.Errorf("check reponse status fail, status: %d", m.Status);
     }
-    if len(errMsg) > 0 && !strings.Contains(m.Error, errMsg) {
-        return fmt.Errorf("check response error message fail, %s", m.Error)
+    if len(errMsg) > 0 && !strings.Contains(m.Message, errMsg) {
+        return fmt.Errorf("check response error message fail, %s", m.Message)
     }
     return nil
 }
@@ -189,8 +186,8 @@ func Test_volGetForBadType(t *testing.T) {
     r.Header.Add("Accept", "text/csv")
     w := httptest.NewRecorder()
     httptest.Do(w, r, apiV1GetVolumeList)
-//    t.Logf("Test volGetForBadType ==> \nResponse: %d,\nBody:%s", w.Code, w.Body.String());
-    err := checkVolResponseError(w, iris.StatusBadRequest, "Accept Type Unknown")
+   // t.Logf("Test volGetForBadType ==> \nResponse: %d,\nBody:%s", w.Code, w.Body.String());
+    err := checkVolResponseError(w, StatusBadRequest, "Accept Type Unknown")
     if err != nil {
         t.Errorf("Test volGetForBadType fail, Error: %v", err);
         return
@@ -203,8 +200,8 @@ func Test_volGetForBadCode(t *testing.T) {
     r.Header.Add("Accept", "text/csv")
     w := httptest.NewRecorder()
     httptest.Do(w, r, apiV1GetVolumeList)
-//    t.Logf("Test volGetForBadCode ==> \nResponse: %d,\nBody:\n%s", w.Code, w.Body.String());
-    err := checkVolResponseError(w, iris.StatusBadRequest, "Stock Code Unknown")
+    //t.Logf("Test volGetForBadCode ==> \nResponse: %d,\nBody:\n%s", w.Code, w.Body.String());
+    err := checkVolResponseError(w, StatusBadRequest, "Stock Code Unknown")
     if err != nil {
         t.Errorf("Test volGetForBadCode fail, Error: %v", err);
         return
@@ -217,7 +214,7 @@ func Test_volGetForBadFromTime(t *testing.T) {
     w := httptest.NewRecorder()
     httptest.Do(w, r, apiV1GetVolumeList)
 //    t.Logf("Test volGetForBadFromTime ==> \nResponse: %d,\nBody:\n%s", w.Code, w.Body.String());
-    err := checkVolResponseError(w, iris.StatusBadRequest, "Parse 120120101 fail")
+    err := checkVolResponseError(w, StatusBadRequest, "Parse 120120101 fail")
     if err != nil {
         t.Errorf("Test volGetForBadFromTime fail, Error: %v", err);
         return
@@ -229,7 +226,7 @@ func Test_volGetForBadToTime(t *testing.T) {
     w := httptest.NewRecorder()
     httptest.Do(w, r, apiV1GetVolumeList)
 //    t.Logf("Test volGetForBadToTime ==> \nResponse: %d,\nBody:\n%s", w.Code, w.Body.String());
-    err := checkVolResponseError(w, iris.StatusBadRequest, "Parse 210120131 fail")
+    err := checkVolResponseError(w, StatusBadRequest, "Parse 210120131 fail")
     if err != nil {
         t.Errorf("Test volGetForBadToTime fail, Error: %v", err);
         return
@@ -241,7 +238,7 @@ func Test_volGetForFromTimeLaterThanTo(t *testing.T) {
     w := httptest.NewRecorder()
     httptest.Do(w, r, apiV1GetVolumeList)
 //    t.Logf("Test volGetForFromTimeLaterThanTo ==> \nResponse: %d,\nBody:\n%s", w.Code, w.Body.String());
-    err := checkVolResponseError(w, iris.StatusBadRequest, "From time is later than To time")
+    err := checkVolResponseError(w, StatusBadRequest, "From time is later than To time")
     if err != nil {
         t.Errorf("Test volGetForFromTimeLaterThanTo fail, Error: %v", err);
         return
@@ -259,7 +256,7 @@ func Test_volGetAndPut(t *testing.T) {
     r1 := httptest.NewRequest("PUT", "/api/v1/vol", bytes.NewReader(reqBin))
     httptest.Do(w1, r1, apiV1PutVolumeList)
 //    t.Logf("Test volGetAndPut ==> \nPut Response: %d,\nBody:\n%s", w1.Code, w1.Body.String());
-    err = checkVolResponseError(w1, iris.StatusOK, "")
+    err = checkVolResponseError(w1, StatusOK, "")
     if err != nil {
         t.Errorf("Test volGetAndPut fail, %s", err);
         return;
@@ -293,8 +290,8 @@ func Test_xdrGetForBadType(t *testing.T) {
     r.Header.Add("Accept", "text/csv")
     w := httptest.NewRecorder()
     httptest.Do(w, r, apiV1GetXDRList)
-    t.Logf("Test xdrGetForBadType ==> \nResponse: %d,\nBody:%s", w.Code, w.Body.String());
-    err := checkVolResponseError(w, iris.StatusBadRequest, "Accept Type Unknown")
+    //t.Logf("Test xdrGetForBadType ==> \nResponse: %d,\nBody:%s", w.Code, w.Body.String());
+    err := checkVolResponseError(w, StatusBadRequest, "Accept Type Unknown")
     if err != nil {
         t.Errorf("Test xdrGetForBadType fail, Error: %v", err);
         return
@@ -308,7 +305,7 @@ func Test_xdrGetForBadCode(t *testing.T) {
     w := httptest.NewRecorder()
     httptest.Do(w, r, apiV1GetXDRList)
 //    t.Logf("Test xdrGetForBadCode ==> \nResponse: %d,\nBody:\n%s", w.Code, w.Body.String());
-    err := checkVolResponseError(w, iris.StatusBadRequest, "Stock Code Unknown")
+    err := checkVolResponseError(w, StatusBadRequest, "Stock Code Unknown")
     if err != nil {
         t.Errorf("Test xdrGetForBadCode fail, Error: %v", err);
         return
@@ -321,7 +318,7 @@ func Test_xdrGetForBadFromTime(t *testing.T) {
     w := httptest.NewRecorder()
     httptest.Do(w, r, apiV1GetXDRList)
 //    t.Logf("Test xdrGetForBadFromTime ==> \nResponse: %d,\nBody:\n%s", w.Code, w.Body.String());
-    err := checkVolResponseError(w, iris.StatusBadRequest, "Parse 120120101 fail")
+    err := checkVolResponseError(w, StatusBadRequest, "Parse 120120101 fail")
     if err != nil {
         t.Errorf("Test xdrGetForBadFromTime fail, Error: %v", err);
         return
@@ -333,7 +330,7 @@ func Test_xdrGetForBadToTime(t *testing.T) {
     w := httptest.NewRecorder()
     httptest.Do(w, r, apiV1GetXDRList)
 //    t.Logf("Test xdrGetForBadToTime ==> \nResponse: %d,\nBody:\n%s", w.Code, w.Body.String());
-    err := checkVolResponseError(w, iris.StatusBadRequest, "Parse 210120131 fail")
+    err := checkVolResponseError(w, StatusBadRequest, "Parse 210120131 fail")
     if err != nil {
         t.Errorf("Test xdrGetForBadToTime fail, Error: %v", err);
         return
@@ -346,7 +343,7 @@ func Test_xdrGetForFromTimeLaterThanTo(t *testing.T) {
     w := httptest.NewRecorder()
     httptest.Do(w, r, apiV1GetXDRList)
 //    t.Logf("Test xdrGetForFromTimeLaterThanTo ==> \nResponse: %d,\nBody:\n%s", w.Code, w.Body.String());
-    err := checkVolResponseError(w, iris.StatusBadRequest, "From time is later than To time")
+    err := checkVolResponseError(w, StatusBadRequest, "From time is later than To time")
     if err != nil {
         t.Errorf("Test xdrGetForFromTimeLaterThanTo fail, Error: %v", err);
         return
@@ -364,7 +361,7 @@ func Test_xdrGetAndPut(t *testing.T) {
     r1 := httptest.NewRequest("PUT", "/api/v1/xdr", bytes.NewReader(reqBin))
     httptest.Do(w1, r1, apiV1PutXDRList)
 //    t.Logf("Test volGetAndPut ==> \nPut Response: %d,\nBody:\n%s", w1.Code, w1.Body.String());
-    err = checkVolResponseError(w1, iris.StatusOK, "")
+    err = checkVolResponseError(w1, StatusOK, "")
     if err != nil {
         t.Errorf("Test xdrGetAndPut fail, %s", err);
         return;
