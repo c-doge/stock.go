@@ -16,7 +16,7 @@ var help bool
 var configFile string
 
 func usage() {
-    fmt.Printf("stock.go version: %s\r\n", version)
+    fmt.Printf("stock.go version: %s\r\n", _version)
     fmt.Printf("Usage: stock.go [-ch]\r\n")
     fmt.Printf("           -h print this message\r\n")
     fmt.Printf("           -c config file path\r\n")
