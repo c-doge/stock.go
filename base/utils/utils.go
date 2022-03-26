@@ -5,10 +5,11 @@ import (
 	"os"
 	"fmt"
 	"sort"
-	"bytes"
 	"time"
 	"math"
+    "bytes"
 	"errors"
+    "strconv"
 	"strings"
 	"io/ioutil"
 	"net/http"
@@ -42,6 +43,11 @@ func DateTimeToDecimalNum(t time.Time) uint32 {
 
 func ParseTime(layout, value string) (time.Time, error) {
     return time.ParseInLocation(layout, value, DefaultTimeZone)
+}
+
+func ParseFloat(v string) float64 {
+    s, _ := strconv.ParseFloat(v, 64)
+    return s
 }
 
 func PathExists(path string) bool {
