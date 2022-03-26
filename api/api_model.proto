@@ -14,7 +14,6 @@ message KData {
     double  turnover  = 8;
 }
 
-
 message XData {
     uint32 date           = 1;
     float  allotVolume    = 2;

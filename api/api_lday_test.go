@@ -14,8 +14,8 @@ import (
     "encoding/csv"
     "encoding/json"
     htest "net/http/httptest"
-    "github.com/kataras/iris/v12"
     "github.com/golang/protobuf/proto"
+    "github.com/kataras/iris/v12"
     "github.com/kataras/iris/v12/httptest"
 
     "github.com/c-doge/stock.go/gostk"

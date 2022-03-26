@@ -97,6 +97,4 @@ func TestMain(m *testing.M) {
     }
     logger.Info("stock.go api test stop >>>")
 
-   // 
-
 }
