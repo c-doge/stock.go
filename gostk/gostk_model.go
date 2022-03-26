@@ -1,9 +1,11 @@
+
 package gostk
 
 import (
     "fmt"
     "time"
     "container/list"
+//    "github.com/c-doge/stock.go/base/utils"
 )
 
 // K线
@@ -44,7 +46,6 @@ func (data KData) Equal(kdata KData) bool {
     return false;
 }
 
-
 func (data KData) IsValid() bool{
     if data.Close <= 0 ||
         data.Open <= 0 ||
@@ -56,7 +57,6 @@ func (data KData) IsValid() bool{
     }
     return true;
 }
-
 
 type KDataMap map[string]*list.List;
 
@@ -123,9 +123,14 @@ func (m KDataMap) ForEach(f func(code string, l *list.List)) {
     }
 }
 
+const (
+    XDATA_XDR              uint32 = 1
+    XDATA_EXP              uint32 = 11
+)
 // 除权/除息 数据
 type XData struct {
     Date                    time.Time     //"时间戳" 
+    Type                    uint32        //类型 1 分红配股， 22             
     // 配股
     AllotVolume             float32       // 每十股配股数
     AllotPrice              float32       // 配股价格
@@ -135,9 +140,13 @@ type XData struct {
 }
 
 func (data XData) String () string {
-
-    result := fmt.Sprintf("%v,  %12.3f,  %12.3f,  %12.3f,  %12.3f",
+    t := "除权除息"
+    if data.Type == XDATA_EXP {
+        t = "扩缩股  "
+    }
+    result := fmt.Sprintf("%v,  %s,    %12.6f,  %12.6f,  %12.6f,  %12.6f",
         data.Date.Format("2006-01-02"),
+        t,
         data.AllotPrice,
         data.AllotVolume,
         data.BonusPrice,
@@ -156,7 +165,7 @@ type VData struct {
 }
 
 func (data VData) String () string {
-    result := fmt.Sprintf("%v, %0.3f, %0.3f, %0.3f, %0.3f",
+    result := fmt.Sprintf("%v,     %0.6f,     %0.6f,     %0.6f,     %0.6f",
         data.Date.Format("2006-01-02"),
         data.PreTradable,
         data.PostTradable,
