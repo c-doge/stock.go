@@ -26,6 +26,8 @@ func equalVData(d1, d2 *gostk.VData) bool {
 func equalXData(d1, d2 *gostk.XData) bool {
     if !d1.Date.Equal(d2.Date) {
         return false
+    } else if d1.Type != d2.Type {
+        return false
     } else if abs32(d1.AllotVolume, d2.AllotVolume) > 0.00001 {
         return false
     } else if abs32(d1.AllotPrice, d2.AllotPrice) > 0.00001 {
@@ -52,8 +54,15 @@ func newStkVData(t time.Time) *gostk.VData {
 }
 
 func newStkXData(t time.Time) *gostk.XData {
+	var _type uint32 
+	if rand.Float32() > 0.5 {
+		_type = gostk.XDATA_EXP
+	} else {
+		_type = gostk.XDATA_XDR
+	}
     x := &gostk.XData {
     	Date:          t,
+    	Type:          _type,
         AllotVolume:   rand.Float32() * 100,
         AllotPrice:    rand.Float32() * 10,
         BonusVolume:   rand.Float32() * 100,

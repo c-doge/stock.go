@@ -46,7 +46,8 @@ func convertStkVDataToRecordVol(code string, list []*gostk.VData) (*RecordVol, e
     var ll = make([]*VData, len(list))
     for i, v := range list {
         vv := &VData {
-            Date:     utils.DateTimeToDecimalNum(v.Date),
+            Date:         utils.DateTimeToDecimalNum(v.Date),
+            Type:         VData_NONE,
             PreTradable:  v.PreTradable,
             PreTotal:     v.PreTotal,
             PostTradable: v.PostTradable,
@@ -59,7 +60,15 @@ func convertStkVDataToRecordVol(code string, list []*gostk.VData) (*RecordVol, e
         Data: ll,
     }, nil
 }
+
+
 func convertStkXDataToRecordXDR(code string, list []*gostk.XData) (*RecordXDR, error) {
+    getType := func(t uint32) XDataType {
+        if t == gostk.XDATA_EXP {
+            return XData_EXP
+        }
+        return XData_XDR
+    }
     if len(list) <= 0 {
         return nil, ErrorInvalidParameter;
     }
@@ -67,6 +76,7 @@ func convertStkXDataToRecordXDR(code string, list []*gostk.XData) (*RecordXDR, e
     for i, x := range list {
         xx := &XData {
             Date:          utils.DateTimeToDecimalNum(x.Date),
+            Type:          getType(x.Type),
             AllotVolume:   x.AllotVolume,
             AllotPrice:    x.AllotPrice,
             BonusVolume:   x.BonusVolume,
@@ -91,7 +101,7 @@ func convertRecordVolToStkVDataList(vol *RecordVol, from, to time.Time) ([]*gost
             break;
         }
         vv := &gostk.VData {
-            Date:           t,
+            Date:           t,         
             PreTradable:    v.GetPreTradable(),
             PreTotal:       v.GetPreTotal(),
             PostTradable:   v.GetPostTradable(),
@@ -105,6 +115,12 @@ func convertRecordVolToStkVDataList(vol *RecordVol, from, to time.Time) ([]*gost
 }
 
 func convertRecordXDRToStkXDataList(xdr *RecordXDR, from, to time.Time) ([]*gostk.XData) {
+    getType := func (t XDataType) uint32 {
+        if t == XData_EXP {
+            return gostk.XDATA_EXP
+        }
+        return gostk.XDATA_XDR
+    }
     var list = make([]*gostk.XData, len(xdr.Data));
     var i = 0;
     for _, x := range xdr.Data {
@@ -116,6 +132,7 @@ func convertRecordXDRToStkXDataList(xdr *RecordXDR, from, to time.Time) ([]*gost
         }
         xx := &gostk.XData {
             Date:          t,
+            Type:          getType(x.GetType()),
             AllotVolume:   x.GetAllotVolume(),
             AllotPrice:    x.GetAllotPrice(),
             BonusVolume:   x.GetBonusVolume(),
