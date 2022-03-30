@@ -4,13 +4,13 @@ option go_package ="../leveldb/";
 package leveldb;
 
 message KData {
-    uint32  time      = 1;
-    float   open      = 2;
-    float   close     = 3;
-    float   high      = 4;
-    float   low       = 5;
-    double  volume    = 6;
-    double  turnover  = 7;
+    uint32  Time      = 1;
+    float   Open      = 2;
+    float   Close     = 3;
+    float   High      = 4;
+    float   Low       = 5;
+    double  Volume    = 6;
+    double  Turnover  = 7;
 }
 
 
@@ -40,19 +40,19 @@ message VData {
 }
 
 message RecordLday {
-    string            code = 1;
-    optional uint32   flag = 2;
-    repeated KData    data = 3;
+    string            Code = 1;
+    optional uint32   Flag = 2;
+    repeated KData    Data = 3;
 }
 
 message RecordXDR {
-    string            code = 1;
-    optional uint32   flag = 2;
-    repeated XData    data = 3;
+    string            Code = 1;
+    optional uint32   Flag = 2;
+    repeated XData    Data = 3;
 }
 
 message RecordVol {
-    string            code = 1;
-    optional uint32   flag = 2;
-    repeated VData    data = 3;
+    string            Code = 1;
+    optional uint32   Flag = 2;
+    repeated VData    Data = 3;
 }
