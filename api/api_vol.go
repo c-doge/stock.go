@@ -178,11 +178,12 @@ func apiV1GetXDRList(ctx iris.Context) {
         return
     }
     if req.Head {
-    	ctx.WriteString("Date,AllotPrice,AllotVolume,BonusPrice,BonusVolume\n")
+    	ctx.WriteString("Date,Type,AllotPrice,AllotVolume,BonusPrice,BonusVolume\n")
     }
    	for _, k := range l {
-        ctx.Writef("%s,%.6f,%.6f,%.6f,%.6f\n",
+        ctx.Writef("%s,%s,%.6f,%.6f,%.6f,%.6f\n",
                                         k.Date.Format("2006-01-02"),
+                                        k.Type.String(),
                                         k.AllotPrice,
                                         k.AllotVolume,
                                         k.BonusPrice,
@@ -191,6 +192,12 @@ func apiV1GetXDRList(ctx iris.Context) {
 }
 
 func apiV1PutXDRList(ctx iris.Context) {
+    getType := func (t XDataType) gostk.XDataType {
+        if t == XData_EXP {
+            return gostk.XData_EXP
+        }
+        return gostk.XData_XDR
+    }
 	var req PutXDRRequest;
     err := ctx.ReadProtobuf(&req)
     if err != nil {
@@ -212,6 +219,7 @@ func apiV1PutXDRList(ctx iris.Context) {
     for i := 0; i < len(req.Data); i++ {
     	l[i] = &gostk.XData {
     		Date:        utils.DecimalNumToDateTime(req.Data[i].Date),
+            Type:        getType(req.Data[i].GetType()),
     		AllotPrice:  req.Data[i].GetAllotPrice(),
     		AllotVolume: req.Data[i].GetAllotVolume(),
 			BonusPrice:  req.Data[i].GetBonusPrice(),

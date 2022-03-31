@@ -135,7 +135,7 @@ func putLday(req *PutLdayRequest) error {
     var m ResponseModel;
     reqBin, err := proto.Marshal(req);
     if err != nil {
-        //t.Errorf("protobuf marshal LDayRequest fail, Error: %v", err);
+        //logger.Warnf("protobuf marshal LDayRequest fail, Error: %v", err);
         return err;
     }
     w := httptest.NewRecorder()
@@ -144,11 +144,10 @@ func putLday(req *PutLdayRequest) error {
 
     err = json.Unmarshal(w.Body.Bytes(), &m);
     if err != nil {
-        //t.Errorf("putLday, Unmarshal response fail, Error: %s", err);
+        //logger.Warnf("putLday, Unmarshal response fail, Error: %s", err);
         return err;
     }
-    if m.Status != httptest.StatusOK {
-        //t.Errorf("putLday, status Code Not Equal to %d", httptest.StatusOK);
+    if m.Status != StatusOK {
         return fmt.Errorf("Response Not Success, statusCode %d", m.Status)
     }
     return nil;
@@ -367,7 +366,7 @@ func Test_PutLday(t *testing.T) {
     if (w3.Code != iris.StatusOK) {
         t.Errorf("TestPutLday.%s, Http Response StatusCode %d", caseName, w3.Code);
     }
-    t.Logf("%s ==> \nResponse: %d,\nBody:\n%s", caseName, w3.Code, w3.Body.String());
+    //t.Logf("%s ==> \nResponse: %d,\nBody:\n%s", caseName, w3.Code, w3.Body.String());
     err = json.Unmarshal(w3.Body.Bytes(), &m3);
     if err != nil {
         t.Errorf("TestPutLday.%s, Unmarshal response fail, Error: %s", caseName, err);

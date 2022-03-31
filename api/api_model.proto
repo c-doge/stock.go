@@ -4,43 +4,52 @@ option go_package ="../api/";
 package pb;
 
 message KData {
-    string  code      = 1;
-    uint32  time      = 2;
-    float   open      = 3;
-    float   close     = 4;
-    float   high      = 5;
-    float   low       = 6;
-    double  volume    = 7;
-    double  turnover  = 8;
+    string  Code      = 1;
+    uint32  Time      = 2;
+    float   Open      = 3;
+    float   Close     = 4;
+    float   High      = 5;
+    float   Low       = 6;
+    double  Volume    = 7;
+    double  Turnover  = 8;
 }
 
 message XData {
-    uint32 date           = 1;
-    float  allotVolume    = 2;
-    float  allotPrice     = 3;
-    float  bonusVolume    = 4;
-    float  bonusPrice     = 5;
+    enum type {
+        XDR = 0;
+        EXP = 1;
+    }
+    uint32 Date           = 1;
+    type   Type           = 2;
+    float  AllotVolume    = 3;
+    float  AllotPrice     = 4;
+    float  BonusVolume    = 5;
+    float  BonusPrice     = 6;
 }
 
 message VData {
-    uint32  date           = 1;
-    double  preTradable    = 2;
-    double  preTotal       = 3;
-    double  postTradable   = 4;
-    double  postTotal      = 5;   
+    enum type {
+        NONE = 0;
+    }
+    uint32  Date           = 1;
+    type    Type           = 2;
+    double  preTradable    = 3;
+    double  preTotal       = 4;
+    double  postTradable   = 5;
+    double  postTotal      = 6;   
 }
 
 
 message PutLdayRequest {
-    repeated KData    data = 1;
+    repeated KData    Data = 1;
 }
 
 message PutXDRRequest {
-    string            code = 1;
-    repeated XData    data = 2;
+    string            Code = 1;
+    repeated XData    Data = 2;
 }
 
 message PutVolRequest {
-    string            code = 1;
-    repeated VData    data = 2;
+    string            Code = 1;
+    repeated VData    Data = 2;
 }

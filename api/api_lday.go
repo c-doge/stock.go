@@ -77,7 +77,8 @@ func apiV1PutLday(ctx iris.Context) {
     })
     msg := fmt.Sprintf("%d stock and %d kdata updated", total_stock, total_kdata)
     logger.Infof("[API.Lday] PutLday %s", msg)
-    
+
+    ctx.StatusCode(iris.StatusOK)
     ctx.JSON(iris.Map{"status": StatusOK, "message": msg})
 }
 

@@ -5,6 +5,7 @@ import (
     "fmt"
     "math"
     "bytes"
+    //"io/ioutil"
     "strings"
     "testing"
     "math/rand"
@@ -22,8 +23,9 @@ import (
 
 func equalVData(d1, d2 *VData) bool {
     if d1.Date != d2.Date {
-        logger.Debugf("1: %d, %d", d1.Date , d2.Date);
         return false
+    } else if d1.Type != d2.Type {
+        return false;
     } else if math.Abs(d1.PreTradable - d2.PreTradable) > 0.00001 {
         return false
     } else if math.Abs(d1.PostTradable - d2.PostTradable) > 0.00001 {
@@ -38,6 +40,8 @@ func equalVData(d1, d2 *VData) bool {
 func equalXData(d1, d2 *XData) bool {
     if d1.Date != d2.Date {
         return false
+    } else if d1.Type != d2.Type {
+        return false;
     } else if abs32(d1.AllotVolume, d2.AllotVolume) > 0.00001 {
         return false
     } else if abs32(d1.AllotPrice, d2.AllotPrice) > 0.00001 {
@@ -51,7 +55,6 @@ func equalXData(d1, d2 *XData) bool {
 }
 
 func checkVolResponseError(w *htest.ResponseRecorder, status int, errMsg string) error {
-
     var m ResponseModel
     if w.Code != iris.StatusOK {
         return fmt.Errorf("check statusCode fail: %d", w.Code);
@@ -104,6 +107,12 @@ func checkVolCsvResponse(code string, r *csv.Reader, ll []*VData) error {
 }
 
 func checkXdrCsvResponse(code string, r *csv.Reader, ll []*XData) error {
+    getType := func(t string) XDataType {
+        if t == "EXP" {
+            return XData_EXP;
+        }
+        return XData_XDR
+    }
     index := 0;
     for {
         record, err := r.Read();
@@ -121,12 +130,14 @@ func checkXdrCsvResponse(code string, r *csv.Reader, ll []*XData) error {
         }
         x := &XData {
             Date:             utils.DateTimeToDecimalNum(t),
-            AllotPrice:       float32(parseFloat(record[1])),
-            AllotVolume:      float32(parseFloat(record[2])),
-            BonusPrice:       float32(parseFloat(record[3])),
-            BonusVolume:      float32(parseFloat(record[4])),
+            Type:             getType(record[1]),
+            AllotPrice:       float32(parseFloat(record[2])),
+            AllotVolume:      float32(parseFloat(record[3])),
+            BonusPrice:       float32(parseFloat(record[4])),
+            BonusVolume:      float32(parseFloat(record[5])),
         }
         if !equalXData(x, ll[index]) {
+            logger.Debugf("%s - %s", x, ll[index]);
             return fmt.Errorf("csv[%d] != putReq.Data[%d], Index:%v", x.Date, ll[index].Date, index);
         }
         index += 1;
@@ -150,7 +161,7 @@ func newPutVolRequest(code string, dateNum uint32, n int) *PutVolRequest {
             PostTradable:  post,
             PostTotal:     post + rand.Float64() * 1000,    
         }
-        logger.Debugf("i:%d, %v", i, l[i])
+        //logger.Debugf("i:%d, %v", i, l[i])
         dateTime = dateTime.AddDate(0, 0 ,1)
     }
     req := &PutVolRequest {
@@ -161,11 +172,18 @@ func newPutVolRequest(code string, dateNum uint32, n int) *PutVolRequest {
 }
 
 func newPutXDRRequest(code string, dateNum uint32, n int) *PutXDRRequest {
+    newType := func() XDataType {
+        if rand.Float32() > 0.5 {
+            return XData_EXP
+        }
+        return XData_XDR
+    }
     dateTime := utils.DecimalNumToDateTime(dateNum)
     l := make([]*XData, n)
     for i:= 0; i < n; i++ {
         l[i] = &XData {
             Date:          utils.DateTimeToDecimalNum(dateTime),
+            Type:          newType(),
             AllotVolume:   rand.Float32() * 100,
             AllotPrice:    rand.Float32() * 10,
             BonusVolume:   rand.Float32() * 100,
