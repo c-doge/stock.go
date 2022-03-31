@@ -54,15 +54,15 @@ func newStkVData(t time.Time) *gostk.VData {
 }
 
 func newStkXData(t time.Time) *gostk.XData {
-	var _type uint32 
-	if rand.Float32() > 0.5 {
-		_type = gostk.XDATA_EXP
-	} else {
-		_type = gostk.XDATA_XDR
-	}
+	newType := func() gostk.XDataType {
+		if rand.Float32() > 0.5 {
+			return gostk.XData_EXP
+		}
+		return gostk.XData_XDR
+	}	
     x := &gostk.XData {
     	Date:          t,
-    	Type:          _type,
+    	Type:          newType(),
         AllotVolume:   rand.Float32() * 100,
         AllotPrice:    rand.Float32() * 10,
         BonusVolume:   rand.Float32() * 100,

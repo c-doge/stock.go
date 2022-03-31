@@ -63,8 +63,8 @@ func convertStkVDataToRecordVol(code string, list []*gostk.VData) (*RecordVol, e
 
 
 func convertStkXDataToRecordXDR(code string, list []*gostk.XData) (*RecordXDR, error) {
-    getType := func(t uint32) XDataType {
-        if t == gostk.XDATA_EXP {
+    getType := func(t gostk.XDataType) XDataType {
+        if t == gostk.XData_EXP {
             return XData_EXP
         }
         return XData_XDR
@@ -115,11 +115,11 @@ func convertRecordVolToStkVDataList(vol *RecordVol, from, to time.Time) ([]*gost
 }
 
 func convertRecordXDRToStkXDataList(xdr *RecordXDR, from, to time.Time) ([]*gostk.XData) {
-    getType := func (t XDataType) uint32 {
+    getType := func (t XDataType) gostk.XDataType {
         if t == XData_EXP {
-            return gostk.XDATA_EXP
+            return gostk.XData_EXP
         }
-        return gostk.XDATA_XDR
+        return gostk.XData_XDR
     }
     var list = make([]*gostk.XData, len(xdr.Data));
     var i = 0;
