@@ -57,14 +57,14 @@ func equalKDataList(k1 []*KData, k2 []*KData) bool {
 
 func getSH600381Xdr() []*XData {
 	xdrList := []*XData {
-		&XData{Date: utils.DecimalNumToDateTime(20020705), Type: 1,  BonusPrice: 0.650, AllotPrice: 0, BonusVolume: 0,        AllotVolume: 0,},
-		&XData{Date: utils.DecimalNumToDateTime(20030521), Type: 1,  BonusPrice: 0.680, AllotPrice: 0, BonusVolume: 0,        AllotVolume: 0,},
-		&XData{Date: utils.DecimalNumToDateTime(20040719), Type: 1,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 10.0,     AllotVolume: 0,},
-		&XData{Date: utils.DecimalNumToDateTime(20050512), Type: 1,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 3.0,      AllotVolume: 0,},
-		&XData{Date: utils.DecimalNumToDateTime(20061127), Type: 1,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 2.24,     AllotVolume: 0,},
-		&XData{Date: utils.DecimalNumToDateTime(20110825), Type: 1,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 5.0,      AllotVolume: 0,},
-		&XData{Date: utils.DecimalNumToDateTime(20120515), Type: 1,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 7.0,      AllotVolume: 0,},
-		&XData{Date: utils.DecimalNumToDateTime(20140627), Type: 11, BonusPrice: 0,     AllotPrice: 0, BonusVolume: 0.124185, AllotVolume: 0,},
+		&XData{Date: utils.DecimalNumToDateTime(20020705), Type: XData_XDR,  BonusPrice: 0.650, AllotPrice: 0, BonusVolume: 0,        AllotVolume: 0,},
+		&XData{Date: utils.DecimalNumToDateTime(20030521), Type: XData_XDR,  BonusPrice: 0.680, AllotPrice: 0, BonusVolume: 0,        AllotVolume: 0,},
+		&XData{Date: utils.DecimalNumToDateTime(20040719), Type: XData_XDR,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 10.0,     AllotVolume: 0,},
+		&XData{Date: utils.DecimalNumToDateTime(20050512), Type: XData_XDR,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 3.0,      AllotVolume: 0,},
+		&XData{Date: utils.DecimalNumToDateTime(20061127), Type: XData_XDR,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 2.24,     AllotVolume: 0,},
+		&XData{Date: utils.DecimalNumToDateTime(20110825), Type: XData_XDR,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 5.0,      AllotVolume: 0,},
+		&XData{Date: utils.DecimalNumToDateTime(20120515), Type: XData_XDR,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 7.0,      AllotVolume: 0,},
+		&XData{Date: utils.DecimalNumToDateTime(20140627), Type: XData_EXP,  BonusPrice: 0,     AllotPrice: 0, BonusVolume: 0.124185, AllotVolume: 0,},
 	}
 	return xdrList
 }

@@ -14,12 +14,12 @@ func ForwardAdjuste(kdataList []*KData, xdrList []*XData) []*KData {
     for i := kdata_len - 1; i >= 0; i-- {
         k := kdataList[i];
         k1 := &KData{
-            Time: k.Time,
-            Open: k.Open,
-            Close: k.Close,
-            High: k.High,
-            Low: k.Low,
-            Volume: k.Volume,
+            Time:     k.Time,
+            Open:     k.Open,
+            Close:    k.Close,
+            High:     k.High,
+            Low:      k.Low,
+            Volume:   k.Volume,
             Turnover: k.Turnover,
         }
         for j := xdr_len - 1; j >= 0 ; j-- {
@@ -57,12 +57,12 @@ func BackwardAdjust(kdataList []*KData, xdrList []*XData) []*KData {
 	for i := 0; i < kdata_len; i++ {
 		k := kdataList[i];
 		k1 := &KData{
-			Time: k.Time,
-			Open: k.Open,
-			Close: k.Close,
-			High: k.High,
-			Low: k.Low,
-			Volume: k.Volume,
+			Time:     k.Time,
+			Open:     k.Open,
+			Close:    k.Close,
+			High:     k.High,
+			Low:      k.Low,
+			Volume:   k.Volume,
 			Turnover: k.Turnover,
 		}
 		for j := xdr_len - 1; j >= 0; j-- {

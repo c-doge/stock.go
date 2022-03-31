@@ -128,7 +128,7 @@ type XDataType uint32
 const (
     XData_UKN              XDataType = 0
     XData_XDR              XDataType = 1
-    XData_EXP              XDataType = 11
+    XData_EXP              XDataType = 2
 )
 
 func (t XDataType) String() string {
