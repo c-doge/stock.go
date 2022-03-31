@@ -123,14 +123,34 @@ func (m KDataMap) ForEach(f func(code string, l *list.List)) {
     }
 }
 
+type XDataType uint32
+
 const (
-    XDATA_XDR              uint32 = 1
-    XDATA_EXP              uint32 = 11
+    XData_UKN              XDataType = 0
+    XData_XDR              XDataType = 1
+    XData_EXP              XDataType = 11
 )
+
+func (t XDataType) String() string {
+    if t == XData_EXP {
+        return "EXP"
+    }
+    return "XDR"
+}
+
+func XDataTypeFromString(s string) XDataType {
+    if s == "EXP" {
+        return XData_EXP;
+    } else if s == "XDR" {
+        return XData_XDR;
+    }
+    return XData_UKN;
+}
+
 // 除权/除息 数据
 type XData struct {
     Date                    time.Time     //"时间戳" 
-    Type                    uint32        //类型 1 分红配股， 22             
+    Type                    XDataType     //类型 1 分红配股， 11      
     // 配股
     AllotVolume             float32       // 每十股配股数
     AllotPrice              float32       // 配股价格
@@ -141,7 +161,7 @@ type XData struct {
 
 func (data XData) String () string {
     t := "除权除息"
-    if data.Type == XDATA_EXP {
+    if data.Type == XData_EXP {
         t = "扩缩股  "
     }
     result := fmt.Sprintf("%v,  %s,    %12.6f,  %12.6f,  %12.6f,  %12.6f",

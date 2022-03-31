@@ -25,7 +25,7 @@ func ForwardAdjuste(kdataList []*KData, xdrList []*XData) []*KData {
         for j := xdr_len - 1; j >= 0 ; j-- {
             x := xdrList[j]
             if k.Time.Before(x.Date) {
-                if x.Type == XDATA_EXP {
+                if x.Type == XData_EXP {
                     k1.Open  = k1.Open / x.BonusVolume;
                     k1.Close = k1.Close / x.BonusVolume;
                     k1.High  = k1.High / x.BonusVolume;
@@ -68,7 +68,7 @@ func BackwardAdjust(kdataList []*KData, xdrList []*XData) []*KData {
 		for j := xdr_len - 1; j >= 0; j-- {
 			x := xdrList[j]
 			if k.Time.After(x.Date) || k.Time.Equal(x.Date) {
-				if x.Type == XDATA_EXP {
+				if x.Type == XData_EXP {
 					k1.Open  = k1.Open * x.BonusVolume;
 					k1.Close = k1.Close * x.BonusVolume;
 					k1.High  = k1.High * x.BonusVolume;
