@@ -52,7 +52,6 @@ func apiV1PutLday(ctx iris.Context) {
     for _, k := range req.Data {
         code, kdata := convertProtoBufToKData(k)
         if gostk.IsStockCodeValid(code) && kdata.Time.After(utils.EarlyDate) {
-//            logger.Infof("[API.Lday] ------%s: %v", code, kdata);
             m.Insert(code, kdata)
         }
     }
@@ -125,6 +124,7 @@ func apiV1GetLday(ctx iris.Context) {
     if err != nil {
         ctx.StatusCode(iris.StatusOK)
         ctx.JSON(iris.Map{"status": StatusServerError, "message": err.Error()})
+        logger.Warnf("[API.Lday] db.GetLday fail, error: %v", err);
         return
     }
 
@@ -143,4 +143,5 @@ func apiV1GetLday(ctx iris.Context) {
                                         k.Volume,
                                         k.Turnover);
     }
+    logger.Infof("[API.Lday] GutLday stock(%s), kdata(%d)", req.Code, len(l))
 }
