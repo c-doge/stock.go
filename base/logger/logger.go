@@ -47,7 +47,7 @@ func New(logLevel string, logPath string, module string) error {
                             // generate soft link, point to latest log file
                             //rotatelogs.WithLinkName(logSoftLink),
                             // maximum time to save log files
-                            rotatelogs.WithMaxAge(7*24*time.Hour),
+                            rotatelogs.WithMaxAge(365*24*time.Hour),
                             // time period of log file switching
                             rotatelogs.WithRotationTime(24*time.Hour),
                             //rotatelogs.WithRotationTime(2*time.Minute),
